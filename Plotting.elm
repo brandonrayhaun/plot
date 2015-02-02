@@ -4,53 +4,69 @@ import Graphics.Element (..)
 import Graphics.Collage (..)
 import Color (..)
 import List as L
+import Text as T
 
-type Widget = Figure F | Axes A | Plot2D P
+type Marker    = Circle | Shell  | Square | Triangle | NoMarker
 
-type LineStyle = Normal | Dashed | Dotted | DashDotted | NoLine
-type Marker    = Circle | Shell  | Square | Triangle   | NoMarker
-
-type alias P = {
+type alias LinePlot = {
     x           : List Float,
     y           : List Float,
-    lineColor   : Color,
-    lineWidth   : Float,
     lineStyle   : LineStyle,
     marker      : Marker,
     markerSize  : Float,
     markerColor : Color
 }
 
-type alias A = {
-    plots       : List P,
+-- finish writing this
+type alias BarPlot = {
+    x : List Float,
+    y : List Float
+}
+
+type alias Axes = {
+    linePlots   : List LinePlot,
+    barPlots    : List BarPlot,
     xTick       : List Float,
     yTick       : List Float,
     xLim        : (Float, Float),
     yLim        : (Float, Float)
 }
 
-type alias F = {
-    axes        : List A,
+type alias Figure = {
+    axes        : List Axes,
     plotSizes   : List (Int, Int),
     coordinates : List
 }
 
-plot : List Float -> List Float -> Widget
-plot xs ys = 
+showL : LinePlot -> Form
+showL p = case p.marker of
+    NoMarker -> toForm <| T.plainText "Not yet supported."
+    _ -> toForm <| T.plainText "Not yet supported."
+
+
+lineColor : Color -> LinePlot -> LinePlot
+lineColor c p = 
+    let pls = p.lineStyle in { p | lineStyle <- { pls | color <- c } }
+
+lineWidth : Float -> LinePlot -> LinePlot
+lineWidth w p =
+    let pls = p.lineStyle in { p | lineStyle <- { pls | width <- w } }
+
+plotL : List Float -> List Float -> LinePlot
+plotL xs ys = 
     let 
         xExtent = L.maximum xs - L.minimum xs
         yExtent = L.maximum ys - L.minimum ys
     in
-        Plot2D {
+        {
             x           = xs,
             y           = ys,
-            lineColor   = green,
-            lineWidth   = 1,
-            lineStyle   = Normal,
+            lineStyle   = defaultLine,
             marker      = NoMarker, 
             markerSize  = 1,
             markerColor = blue
         }
+
 
 {--show : 
         axis = {

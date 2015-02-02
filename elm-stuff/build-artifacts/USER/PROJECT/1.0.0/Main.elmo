@@ -10,9 +10,29 @@ Elm.Main.make = function (_elm) {
    _L = _N.List.make(_elm),
    _P = _N.Ports.make(_elm),
    $moduleName = "Main",
-   $Text = Elm.Text.make(_elm);
-   var main = $Text.plainText("In Progress!");
+   $Basics = Elm.Basics.make(_elm),
+   $Color = Elm.Color.make(_elm),
+   $Graphics$Collage = Elm.Graphics.Collage.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Plotting = Elm.Plotting.make(_elm);
+   var example1 = $Plotting.lineWidth(5)($Plotting.lineColor($Color.blue)(A2($Plotting.plotL,
+   _L.range(-50,50),
+   _L.range(-50,50))));
+   var plottt = A3($Graphics$Collage.collage,
+   105,
+   105,
+   _L.fromArray([$Graphics$Collage.traced(example1.lineStyle)($Graphics$Collage.path(A3($List.map2,
+   F2(function (v0,v1) {
+      return {ctor: "_Tuple2"
+             ,_0: v0
+             ,_1: v1};
+   }),
+   example1.x,
+   example1.y)))]));
+   var main = plottt;
    _elm.Main.values = {_op: _op
+                      ,example1: example1
+                      ,plottt: plottt
                       ,main: main};
    return _elm.Main.values;
 };

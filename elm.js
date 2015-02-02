@@ -1779,9 +1779,29 @@ Elm.Main.make = function (_elm) {
    _L = _N.List.make(_elm),
    _P = _N.Ports.make(_elm),
    $moduleName = "Main",
-   $Text = Elm.Text.make(_elm);
-   var main = $Text.plainText("In Progress!");
+   $Basics = Elm.Basics.make(_elm),
+   $Color = Elm.Color.make(_elm),
+   $Graphics$Collage = Elm.Graphics.Collage.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Plotting = Elm.Plotting.make(_elm);
+   var example1 = $Plotting.lineWidth(5)($Plotting.lineColor($Color.blue)(A2($Plotting.plotL,
+   _L.range(-50,50),
+   _L.range(-50,50))));
+   var plottt = A3($Graphics$Collage.collage,
+   105,
+   105,
+   _L.fromArray([$Graphics$Collage.traced(example1.lineStyle)($Graphics$Collage.path(A3($List.map2,
+   F2(function (v0,v1) {
+      return {ctor: "_Tuple2"
+             ,_0: v0
+             ,_1: v1};
+   }),
+   example1.x,
+   example1.y)))]));
+   var main = plottt;
    _elm.Main.values = {_op: _op
+                      ,example1: example1
+                      ,plottt: plottt
                       ,main: main};
    return _elm.Main.values;
 };
@@ -4901,97 +4921,111 @@ Elm.Plotting.make = function (_elm) {
    $moduleName = "Plotting",
    $Basics = Elm.Basics.make(_elm),
    $Color = Elm.Color.make(_elm),
-   $List = Elm.List.make(_elm);
-   var F = F3(function (a,b,c) {
+   $Graphics$Collage = Elm.Graphics.Collage.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Text = Elm.Text.make(_elm);
+   var lineWidth = F2(function (w,
+   p) {
+      return function () {
+         var pls = p.lineStyle;
+         return _U.replace([["lineStyle"
+                            ,_U.replace([["width",w]],
+                            pls)]],
+         p);
+      }();
+   });
+   var lineColor = F2(function (c,
+   p) {
+      return function () {
+         var pls = p.lineStyle;
+         return _U.replace([["lineStyle"
+                            ,_U.replace([["color",c]],
+                            pls)]],
+         p);
+      }();
+   });
+   var showL = function (p) {
+      return function () {
+         var _v0 = p.marker;
+         switch (_v0.ctor)
+         {case "NoMarker":
+            return $Graphics$Collage.toForm($Text.plainText("Not yet supported."));}
+         return $Graphics$Collage.toForm($Text.plainText("Not yet supported."));
+      }();
+   };
+   var Figure = F3(function (a,
+   b,
+   c) {
       return {_: {}
              ,axes: a
              ,coordinates: c
              ,plotSizes: b};
    });
-   var A = F5(function (a,
-   b,
-   c,
-   d,
-   e) {
-      return {_: {}
-             ,plots: a
-             ,xLim: d
-             ,xTick: b
-             ,yLim: e
-             ,yTick: c};
-   });
-   var P = F8(function (a,
+   var Axes = F6(function (a,
    b,
    c,
    d,
    e,
-   f,
-   g,
-   h) {
+   f) {
       return {_: {}
-             ,lineColor: c
-             ,lineStyle: e
-             ,lineWidth: d
-             ,marker: f
-             ,markerColor: h
-             ,markerSize: g
+             ,barPlots: b
+             ,linePlots: a
+             ,xLim: e
+             ,xTick: c
+             ,yLim: f
+             ,yTick: d};
+   });
+   var BarPlot = F2(function (a,
+   b) {
+      return {_: {},x: a,y: b};
+   });
+   var LinePlot = F6(function (a,
+   b,
+   c,
+   d,
+   e,
+   f) {
+      return {_: {}
+             ,lineStyle: c
+             ,marker: d
+             ,markerColor: f
+             ,markerSize: e
              ,x: a
              ,y: b};
    });
    var NoMarker = {ctor: "NoMarker"};
+   var plotL = F2(function (xs,
+   ys) {
+      return function () {
+         var yExtent = $List.maximum(ys) - $List.minimum(ys);
+         var xExtent = $List.maximum(xs) - $List.minimum(xs);
+         return {_: {}
+                ,lineStyle: $Graphics$Collage.defaultLine
+                ,marker: NoMarker
+                ,markerColor: $Color.blue
+                ,markerSize: 1
+                ,x: xs
+                ,y: ys};
+      }();
+   });
    var Triangle = {ctor: "Triangle"};
    var Square = {ctor: "Square"};
    var Shell = {ctor: "Shell"};
    var Circle = {ctor: "Circle"};
-   var NoLine = {ctor: "NoLine"};
-   var DashDotted = {ctor: "DashDotted"};
-   var Dotted = {ctor: "Dotted"};
-   var Dashed = {ctor: "Dashed"};
-   var Normal = {ctor: "Normal"};
-   var Plot2D = function (a) {
-      return {ctor: "Plot2D"
-             ,_0: a};
-   };
-   var plot = F2(function (xs,ys) {
-      return function () {
-         var yExtent = $List.maximum(ys) - $List.minimum(ys);
-         var xExtent = $List.maximum(xs) - $List.minimum(xs);
-         return Plot2D({_: {}
-                       ,lineColor: $Color.green
-                       ,lineStyle: Normal
-                       ,lineWidth: 1
-                       ,marker: NoMarker
-                       ,markerColor: $Color.blue
-                       ,markerSize: 1
-                       ,x: xs
-                       ,y: ys});
-      }();
-   });
-   var Axes = function (a) {
-      return {ctor: "Axes",_0: a};
-   };
-   var Figure = function (a) {
-      return {ctor: "Figure"
-             ,_0: a};
-   };
    _elm.Plotting.values = {_op: _op
-                          ,Figure: Figure
-                          ,Axes: Axes
-                          ,Plot2D: Plot2D
-                          ,Normal: Normal
-                          ,Dashed: Dashed
-                          ,Dotted: Dotted
-                          ,DashDotted: DashDotted
-                          ,NoLine: NoLine
                           ,Circle: Circle
                           ,Shell: Shell
                           ,Square: Square
                           ,Triangle: Triangle
                           ,NoMarker: NoMarker
-                          ,P: P
-                          ,A: A
-                          ,F: F
-                          ,plot: plot};
+                          ,LinePlot: LinePlot
+                          ,BarPlot: BarPlot
+                          ,Axes: Axes
+                          ,Figure: Figure
+                          ,showL: showL
+                          ,lineColor: lineColor
+                          ,lineWidth: lineWidth
+                          ,plotL: plotL};
    return _elm.Plotting.values;
 };
 Elm.Result = Elm.Result || {};

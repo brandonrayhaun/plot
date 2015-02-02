@@ -1,0 +1,107 @@
+Elm.Plotting = Elm.Plotting || {};
+Elm.Plotting.make = function (_elm) {
+   "use strict";
+   _elm.Plotting = _elm.Plotting || {};
+   if (_elm.Plotting.values)
+   return _elm.Plotting.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   _P = _N.Ports.make(_elm),
+   $moduleName = "Plotting",
+   $Basics = Elm.Basics.make(_elm),
+   $Color = Elm.Color.make(_elm),
+   $List = Elm.List.make(_elm);
+   var F = F3(function (a,b,c) {
+      return {_: {}
+             ,axes: a
+             ,coordinates: c
+             ,plotSizes: b};
+   });
+   var A = F5(function (a,
+   b,
+   c,
+   d,
+   e) {
+      return {_: {}
+             ,plots: a
+             ,xLim: d
+             ,xTick: b
+             ,yLim: e
+             ,yTick: c};
+   });
+   var P = F8(function (a,
+   b,
+   c,
+   d,
+   e,
+   f,
+   g,
+   h) {
+      return {_: {}
+             ,lineColor: c
+             ,lineStyle: e
+             ,lineWidth: d
+             ,marker: f
+             ,markerColor: h
+             ,markerSize: g
+             ,x: a
+             ,y: b};
+   });
+   var NoMarker = {ctor: "NoMarker"};
+   var Triangle = {ctor: "Triangle"};
+   var Square = {ctor: "Square"};
+   var Shell = {ctor: "Shell"};
+   var Circle = {ctor: "Circle"};
+   var NoLine = {ctor: "NoLine"};
+   var DashDotted = {ctor: "DashDotted"};
+   var Dotted = {ctor: "Dotted"};
+   var Dashed = {ctor: "Dashed"};
+   var Normal = {ctor: "Normal"};
+   var Plot2D = function (a) {
+      return {ctor: "Plot2D"
+             ,_0: a};
+   };
+   var plot = F2(function (xs,ys) {
+      return function () {
+         var yExtent = $List.maximum(ys) - $List.minimum(ys);
+         var xExtent = $List.maximum(xs) - $List.minimum(xs);
+         return Plot2D({_: {}
+                       ,lineColor: $Color.green
+                       ,lineStyle: Normal
+                       ,lineWidth: 1
+                       ,marker: NoMarker
+                       ,markerColor: $Color.blue
+                       ,markerSize: 1
+                       ,x: xs
+                       ,y: ys});
+      }();
+   });
+   var Axes = function (a) {
+      return {ctor: "Axes",_0: a};
+   };
+   var Figure = function (a) {
+      return {ctor: "Figure"
+             ,_0: a};
+   };
+   _elm.Plotting.values = {_op: _op
+                          ,Figure: Figure
+                          ,Axes: Axes
+                          ,Plot2D: Plot2D
+                          ,Normal: Normal
+                          ,Dashed: Dashed
+                          ,Dotted: Dotted
+                          ,DashDotted: DashDotted
+                          ,NoLine: NoLine
+                          ,Circle: Circle
+                          ,Shell: Shell
+                          ,Square: Square
+                          ,Triangle: Triangle
+                          ,NoMarker: NoMarker
+                          ,P: P
+                          ,A: A
+                          ,F: F
+                          ,plot: plot};
+   return _elm.Plotting.values;
+};

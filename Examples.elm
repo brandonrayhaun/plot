@@ -1,4 +1,5 @@
 import Plotting (..)
+import Text (..)
 
 -- Examples
 

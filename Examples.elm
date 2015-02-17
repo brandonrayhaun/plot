@@ -8,6 +8,7 @@ import Color (..)
 import Debug (..)
 import Signal as S
 import Time (..)
+import Window
 
 xpoints = linspace -3 3 100
 ypoints = L.map (\x -> (3*x^5 - 20*x^3)/32) xpoints
@@ -26,6 +27,8 @@ example2 = LP.plot xpoints ypoints
 timeElapsed : Signal Float
 timeElapsed = S.foldp (+) 0 <| fps 30
 
+d : Signal (Int, Int)
+d = Window.dimensions
 
 ax pl = axes 
     |> LP.addPlots pl
@@ -36,4 +39,4 @@ ax pl = axes
     |> xLimits (-2.8,2.8)
 
 -- Examples
-main = S.map (\t -> showA (900,1000) <| ax <| [example1 <| L.map ((*) (t/1000)) ypoints,example2]) timeElapsed
+main = S.map2 (\(d1,d2) t -> showA (toFloat d1, toFloat d2) <| ax <| [example1 <| L.map ((*) (3*sin(t/200))) ypoints,example2]) d timeElapsed

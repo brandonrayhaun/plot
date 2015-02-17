@@ -637,6 +637,62 @@ Elm.Color.make = function (_elm) {
                        ,darkCharcoal: darkCharcoal};
    return _elm.Color.values;
 };
+Elm.Debug = Elm.Debug || {};
+Elm.Debug.make = function (_elm) {
+   "use strict";
+   _elm.Debug = _elm.Debug || {};
+   if (_elm.Debug.values)
+   return _elm.Debug.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   _P = _N.Ports.make(_elm),
+   $moduleName = "Debug",
+   $Graphics$Collage = Elm.Graphics.Collage.make(_elm),
+   $Native$Debug = Elm.Native.Debug.make(_elm);
+   var trace = $Native$Debug.tracePath;
+   var watchSummary = $Native$Debug.watchSummary;
+   var watch = $Native$Debug.watch;
+   var crash = $Native$Debug.crash;
+   var log = $Native$Debug.log;
+   _elm.Debug.values = {_op: _op
+                       ,log: log
+                       ,crash: crash
+                       ,watch: watch
+                       ,watchSummary: watchSummary
+                       ,trace: trace};
+   return _elm.Debug.values;
+};
+Elm.FormatNumber = Elm.FormatNumber || {};
+Elm.FormatNumber.make = function (_elm) {
+   "use strict";
+   _elm.FormatNumber = _elm.FormatNumber || {};
+   if (_elm.FormatNumber.values)
+   return _elm.FormatNumber.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   _P = _N.Ports.make(_elm),
+   $moduleName = "FormatNumber",
+   $Native$Formatting = Elm.Native.Formatting.make(_elm);
+   var exponential = F2(function (d,
+   x) {
+      return A2($Native$Formatting.toExponential,
+      x,
+      d);
+   });
+   var fixed = F2(function (d,x) {
+      return A2($Native$Formatting.toFixed,
+      x,
+      d);
+   });
+   _elm.FormatNumber.values = {_op: _op
+                              ,fixed: fixed
+                              ,exponential: exponential};
+   return _elm.FormatNumber.values;
+};
 Elm.Graphics = Elm.Graphics || {};
 Elm.Graphics.Collage = Elm.Graphics.Collage || {};
 Elm.Graphics.Collage.make = function (_elm) {
@@ -1535,6 +1591,211 @@ Elm.Graphics.Element.make = function (_elm) {
                                   ,outward: outward};
    return _elm.Graphics.Element.values;
 };
+Elm.LinePlot = Elm.LinePlot || {};
+Elm.LinePlot.make = function (_elm) {
+   "use strict";
+   _elm.LinePlot = _elm.LinePlot || {};
+   if (_elm.LinePlot.values)
+   return _elm.LinePlot.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   _P = _N.Ports.make(_elm),
+   $moduleName = "LinePlot",
+   $Basics = Elm.Basics.make(_elm),
+   $Color = Elm.Color.make(_elm),
+   $Graphics$Collage = Elm.Graphics.Collage.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Types = Elm.Types.make(_elm);
+   var plotToForms = F4(function (_v0,
+   _v1,
+   _v2,
+   p) {
+      return function () {
+         switch (_v2.ctor)
+         {case "_Tuple2":
+            return function () {
+                 switch (_v1.ctor)
+                 {case "_Tuple2":
+                    return function () {
+                         switch (_v0.ctor)
+                         {case "_Tuple2":
+                            return function () {
+                                 var yExtent = _v1._1 - _v1._0;
+                                 var xExtent = _v0._1 - _v0._0;
+                                 var sy_ = _v2._1 * (3.8 / 5);
+                                 var sx_ = _v2._0 * (3.8 / 5);
+                                 var adjustY = function (y) {
+                                    return sy_ / (_v1._1 - _v1._0) * (y - _v1._0) - sy_ / 2;
+                                 };
+                                 var adjustedY = A2($List.map,
+                                 adjustY,
+                                 p.y);
+                                 var adjustX = function (x) {
+                                    return sx_ / (_v0._1 - _v0._0) * (x - _v0._0) - sx_ / 2;
+                                 };
+                                 var adjustedX = A2($List.map,
+                                 adjustX,
+                                 p.x);
+                                 var points = A3($List.map2,
+                                 F2(function (v0,v1) {
+                                    return {ctor: "_Tuple2"
+                                           ,_0: v0
+                                           ,_1: v1};
+                                 }),
+                                 adjustedX,
+                                 adjustedY);
+                                 var line = p.line ? _L.fromArray([$Graphics$Collage.traced(p.lineStyle)($Graphics$Collage.path(points))]) : _L.fromArray([]);
+                                 return A2($Basics._op["++"],
+                                 line,
+                                 function () {
+                                    var _v12 = p.marker;
+                                    switch (_v12.ctor)
+                                    {case "Circle":
+                                       return A2($List.map,
+                                         function (x) {
+                                            return $Graphics$Collage.move(x)($Graphics$Collage.filled(p.markerColor)($Graphics$Collage.circle(p.markerSize)));
+                                         },
+                                         points);
+                                       case "NGon":
+                                       return A2($List.map,
+                                         function (x) {
+                                            return $Graphics$Collage.move(x)($Graphics$Collage.filled(p.markerColor)(A2($Graphics$Collage.ngon,
+                                            _v12._0,
+                                            p.markerSize)));
+                                         },
+                                         points);
+                                       case "NoMarker":
+                                       return _L.fromArray([]);
+                                       case "Shell":
+                                       return A2($List.map,
+                                         function (x) {
+                                            return $Graphics$Collage.move(x)($Graphics$Collage.outlined(_U.replace([["color"
+                                                                                                                    ,p.markerColor]],
+                                            $Graphics$Collage.defaultLine))($Graphics$Collage.circle(p.markerSize)));
+                                         },
+                                         points);}
+                                    _U.badCase($moduleName,
+                                    "between lines 96 and 101");
+                                 }());
+                              }();}
+                         _U.badCase($moduleName,
+                         "between lines 84 and 101");
+                      }();}
+                 _U.badCase($moduleName,
+                 "between lines 84 and 101");
+              }();}
+         _U.badCase($moduleName,
+         "between lines 84 and 101");
+      }();
+   });
+   var safe = F2(function (f,ss) {
+      return $List.isEmpty(ss) ? _L.fromArray([]) : _L.fromArray([f(ss)]);
+   });
+   var plot = F2(function (xs,ys) {
+      return {_: {}
+             ,line: true
+             ,lineStyle: $Graphics$Collage.defaultLine
+             ,marker: $Types.NoMarker
+             ,markerColor: $Color.blue
+             ,markerSize: 1
+             ,x: xs
+             ,y: ys};
+   });
+   var fromPlot = function (p) {
+      return function () {
+         switch (p.ctor)
+         {case "LP":
+            return $Maybe.Just(p._0);}
+         return $Maybe.Nothing;
+      }();
+   };
+   var getLinePlots = function (a) {
+      return A2($List.filterMap,
+      fromPlot,
+      a.plots);
+   };
+   var toPlot = function (p) {
+      return $Types.LP(p);
+   };
+   var addPlots = F2(function (lps,
+   a) {
+      return function () {
+         var updatedPlots = $List.append(a.plots)(A2($List.map,
+         toPlot,
+         lps));
+         return _U.replace([["plots"
+                            ,updatedPlots]],
+         a);
+      }();
+   });
+   var markerColor = F2(function (c,
+   p) {
+      return _U.replace([["markerColor"
+                         ,c]],
+      p);
+   });
+   var markerSize = F2(function (s,
+   p) {
+      return _U.replace([["markerSize"
+                         ,s]],
+      p);
+   });
+   var marker = F2(function (m,p) {
+      return _U.replace([["marker"
+                         ,m]],
+      p);
+   });
+   var lineStyle = F2(function (l,
+   p) {
+      return _U.replace([["lineStyle"
+                         ,l]],
+      p);
+   });
+   var line = F2(function (b,p) {
+      return _U.replace([["line"
+                         ,b]],
+      p);
+   });
+   var lineWidth = F2(function (w,
+   p) {
+      return function () {
+         var pls = p.lineStyle;
+         return _U.replace([["lineStyle"
+                            ,_U.replace([["width",w]],
+                            pls)]],
+         p);
+      }();
+   });
+   var lineColor = F2(function (c,
+   p) {
+      return function () {
+         var pls = p.lineStyle;
+         return _U.replace([["lineStyle"
+                            ,_U.replace([["color",c]],
+                            pls)]],
+         p);
+      }();
+   });
+   _elm.LinePlot.values = {_op: _op
+                          ,lineColor: lineColor
+                          ,lineWidth: lineWidth
+                          ,line: line
+                          ,lineStyle: lineStyle
+                          ,marker: marker
+                          ,markerSize: markerSize
+                          ,markerColor: markerColor
+                          ,toPlot: toPlot
+                          ,fromPlot: fromPlot
+                          ,addPlots: addPlots
+                          ,getLinePlots: getLinePlots
+                          ,plot: plot
+                          ,safe: safe
+                          ,plotToForms: plotToForms};
+   return _elm.LinePlot.values;
+};
 Elm.List = Elm.List || {};
 Elm.List.make = function (_elm) {
    "use strict";
@@ -1781,27 +2042,66 @@ Elm.Main.make = function (_elm) {
    $moduleName = "Main",
    $Basics = Elm.Basics.make(_elm),
    $Color = Elm.Color.make(_elm),
-   $Graphics$Collage = Elm.Graphics.Collage.make(_elm),
+   $LinePlot = Elm.LinePlot.make(_elm),
    $List = Elm.List.make(_elm),
-   $Plotting = Elm.Plotting.make(_elm);
-   var example1 = $Plotting.lineWidth(5)($Plotting.lineColor($Color.blue)(A2($Plotting.plotL,
-   _L.range(-50,50),
-   _L.range(-50,50))));
-   var plottt = A3($Graphics$Collage.collage,
-   105,
-   105,
-   _L.fromArray([$Graphics$Collage.traced(example1.lineStyle)($Graphics$Collage.path(A3($List.map2,
-   F2(function (v0,v1) {
-      return {ctor: "_Tuple2"
-             ,_0: v0
-             ,_1: v1};
+   $Plot = Elm.Plot.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Time = Elm.Time.make(_elm),
+   $Types = Elm.Types.make(_elm);
+   var ax = function (pl) {
+      return $Plot.xLimits({ctor: "_Tuple2"
+                           ,_0: -2.8
+                           ,_1: 2.8})($Plot.yLimits({ctor: "_Tuple2"
+                                                    ,_0: -6
+                                                    ,_1: 6})($Plot.yTick(_L.fromArray([5
+                                                                                      ,-5]))($Plot.xTick(_L.fromArray([-2
+                                                                                                                      ,-1
+                                                                                                                      ,0
+                                                                                                                      ,1
+                                                                                                                      ,2]))($Plot.title("Hello")($LinePlot.addPlots(pl)($Plot.axes))))));
+   };
+   var timeElapsed = A2($Signal.foldp,
+   F2(function (x,y) {
+      return x + y;
    }),
-   example1.x,
-   example1.y)))]));
-   var main = plottt;
+   0)($Time.fps(30));
+   var xpoints = A3($Plot.linspace,
+   -3,
+   3,
+   100);
+   var ypoints = A2($List.map,
+   function (x) {
+      return (3 * Math.pow(x,
+      5) - 20 * Math.pow(x,3)) / 32;
+   },
+   xpoints);
+   var example1 = function (ys) {
+      return $LinePlot.markerSize(5)($LinePlot.lineWidth(6)($LinePlot.lineColor($Color.green)(A2($LinePlot.plot,
+      xpoints,
+      ys))));
+   };
+   var example2 = $LinePlot.lineWidth(6)($LinePlot.lineColor($Color.blue)(A2($LinePlot.plot,
+   xpoints,
+   ypoints)));
+   var main = A2($Signal.map,
+   function (t) {
+      return $Plot.showA({ctor: "_Tuple2"
+                         ,_0: 900
+                         ,_1: 1000})(ax(_L.fromArray([example1(A2($List.map,
+                                                     F2(function (x,y) {
+                                                        return x * y;
+                                                     })(t / 1000),
+                                                     ypoints))
+                                                     ,example2])));
+   },
+   timeElapsed);
    _elm.Main.values = {_op: _op
+                      ,xpoints: xpoints
+                      ,ypoints: ypoints
                       ,example1: example1
-                      ,plottt: plottt
+                      ,example2: example2
+                      ,timeElapsed: timeElapsed
+                      ,ax: ax
                       ,main: main};
    return _elm.Main.values;
 };
@@ -2029,6 +2329,92 @@ Elm.Native.Color.make = function(elm) {
 
 };
 
+Elm.Native.Debug = {};
+Elm.Native.Debug.make = function(elm) {
+    elm.Native = elm.Native || {};
+    elm.Native.Debug = elm.Native.Debug || {};
+    if (elm.Native.Debug.values)
+    {
+        return elm.Native.Debug.values;
+    }
+
+    var toString = Elm.Native.Show.make(elm).toString;
+
+    function log(tag, value)
+    {
+        var msg = tag + ': ' + toString(value);
+        var process = process || {};
+        if (process.stdout) {
+            process.stdout.write(msg);
+        } else {
+            console.log(msg);
+        }
+        return value;
+    }
+
+    function crash(message)
+    {
+        throw new Error(message);
+    }
+
+    function tracePath(tag, form)
+    {
+        if (elm.debug)
+        {
+            return elm.debug.trace(tag, form);
+        }
+        return form;
+    }
+
+    function watch(tag, value)
+    {
+        if (elm.debug)
+        {
+            elm.debug.watch(tag, value);
+        }
+        return value;
+    }
+
+    function watchSummary(tag, summarize, value)
+    {
+        if (elm.debug)
+        {
+            elm.debug.watch(tag, summarize(value));
+        }
+        return value;
+    }
+
+    return elm.Native.Debug.values = {
+        crash: crash,
+        tracePath: F2(tracePath),
+        log: F2(log),
+        watch: F2(watch),
+        watchSummary:F3(watchSummary),
+    };
+};
+
+Elm.Native.Formatting = {};
+Elm.Native.Formatting.make = function(localRunTime) {
+  localRunTime.Native = localRunTime.Native || {};
+  localRunTime.Native.Formatting = localRunTime.Native.Formatting || {};
+
+  var Utils = Elm.Native.Utils.make(localRunTime);
+
+  if (localRunTime.Native.Formatting.values) {
+    return localRunTime.Native.Formatting.values;
+  }
+
+  function toFixed(num,prec) {
+    return num.toFixed(prec);
+  }
+  function toExponential(num,prec) {
+    return num.toExponential(prec);
+  }
+
+  return localRunTime.Native.Formatting.values = {
+    toFixed:F2(toFixed), toExponential:F2(toExponential)
+  }
+};
 
 // setup
 Elm.Native = Elm.Native || {};
@@ -4501,6 +4887,71 @@ Elm.Native.Text.make = function(elm) {
     };
 };
 
+Elm.Native.Time = {};
+Elm.Native.Time.make = function(elm) {
+
+  elm.Native = elm.Native || {};
+  elm.Native.Time = elm.Native.Time || {};
+  if (elm.Native.Time.values) return elm.Native.Time.values;
+
+  var Signal = Elm.Signal.make(elm);
+  var NS = Elm.Native.Signal.make(elm);
+  var Maybe = Elm.Maybe.make(elm);
+  var Utils = Elm.Native.Utils.make(elm);
+
+  function fpsWhen(desiredFPS, isOn) {
+    var msPerFrame = 1000 / desiredFPS;
+    var prev = elm.timer.now(), curr = prev, diff = 0, wasOn = true;
+    var ticker = NS.input(diff);
+    function tick(zero) {
+      return function() {
+        curr = elm.timer.now();
+        diff = zero ? 0 : curr - prev;
+        if (prev > curr) {
+          diff = 0;
+        }
+        prev = curr;
+        elm.notify(ticker.id, diff);
+      };
+    }
+    var timeoutID = 0;
+    function f(isOn, t) {
+      if (isOn) {
+        timeoutID = elm.setTimeout(tick(!wasOn && isOn), msPerFrame);
+      } else if (wasOn) {
+        clearTimeout(timeoutID);
+      }
+      wasOn = isOn;
+      return t;
+    }
+    return A3( Signal.map2, F2(f), isOn, ticker );
+  }
+
+  function every(t) {
+    var clock = NS.input(elm.timer.now());
+    function tellTime() {
+        elm.notify(clock.id, elm.timer.now());
+    }
+    setInterval(tellTime, t);
+    return clock;
+  }
+
+  function read(s) {
+      var t = Date.parse(s);
+      return isNaN(t) ? Maybe.Nothing : Maybe.Just(t);
+  }
+  return elm.Native.Time.values = {
+      fpsWhen : F2(fpsWhen),
+      fps : function(t) { return fpsWhen(t, Signal.constant(true)); },
+      every : every,
+      delay : NS.delay,
+      timestamp : NS.timestamp,
+      toDate : function(t) { return new window.Date(t); },
+      read   : read
+  };
+
+};
+
 Elm.Native.Transform2D = {};
 Elm.Native.Transform2D.make = function(elm) {
 
@@ -4907,126 +5358,426 @@ Elm.Native.Utils.make = function(localRuntime) {
     };
 };
 
-Elm.Plotting = Elm.Plotting || {};
-Elm.Plotting.make = function (_elm) {
+Elm.Plot = Elm.Plot || {};
+Elm.Plot.make = function (_elm) {
    "use strict";
-   _elm.Plotting = _elm.Plotting || {};
-   if (_elm.Plotting.values)
-   return _elm.Plotting.values;
+   _elm.Plot = _elm.Plot || {};
+   if (_elm.Plot.values)
+   return _elm.Plot.values;
    var _op = {},
    _N = Elm.Native,
    _U = _N.Utils.make(_elm),
    _L = _N.List.make(_elm),
    _P = _N.Ports.make(_elm),
-   $moduleName = "Plotting",
+   $moduleName = "Plot",
    $Basics = Elm.Basics.make(_elm),
    $Color = Elm.Color.make(_elm),
+   $FormatNumber = Elm.FormatNumber.make(_elm),
    $Graphics$Collage = Elm.Graphics.Collage.make(_elm),
+   $Graphics$Element = Elm.Graphics.Element.make(_elm),
+   $LinePlot = Elm.LinePlot.make(_elm),
    $List = Elm.List.make(_elm),
-   $Text = Elm.Text.make(_elm);
-   var lineWidth = F2(function (w,
-   p) {
-      return function () {
-         var pls = p.lineStyle;
-         return _U.replace([["lineStyle"
-                            ,_U.replace([["width",w]],
-                            pls)]],
-         p);
-      }();
+   $Maybe = Elm.Maybe.make(_elm),
+   $Text = Elm.Text.make(_elm),
+   $Types = Elm.Types.make(_elm);
+   var plots = F2(function (ps,
+   ax) {
+      return _U.replace([["plots"
+                         ,ps]],
+      ax);
    });
-   var lineColor = F2(function (c,
-   p) {
+   var autoYLims = function (ax) {
       return function () {
-         var pls = p.lineStyle;
-         return _U.replace([["lineStyle"
-                            ,_U.replace([["color",c]],
-                            pls)]],
-         p);
-      }();
-   });
-   var showL = function (p) {
-      return function () {
-         var _v0 = p.marker;
-         switch (_v0.ctor)
-         {case "NoMarker":
-            return $Graphics$Collage.toForm($Text.plainText("Not yet supported."));}
-         return $Graphics$Collage.toForm($Text.plainText("Not yet supported."));
+         var getVal = F2(function (f,
+         p) {
+            return function () {
+               switch (p.ctor)
+               {case "LP": return f(p._0.y);}
+               _U.badCase($moduleName,
+               "between lines 84 and 86");
+            }();
+         });
+         return {ctor: "_Tuple2"
+                ,_0: $List.minimum(A2($List.map,
+                getVal($List.minimum),
+                ax.plots))
+                ,_1: $List.maximum(A2($List.map,
+                getVal($List.maximum),
+                ax.plots))};
       }();
    };
-   var Figure = F3(function (a,
-   b,
-   c) {
-      return {_: {}
-             ,axes: a
-             ,coordinates: c
-             ,plotSizes: b};
-   });
-   var Axes = F6(function (a,
-   b,
-   c,
-   d,
-   e,
-   f) {
-      return {_: {}
-             ,barPlots: b
-             ,linePlots: a
-             ,xLim: e
-             ,xTick: c
-             ,yLim: f
-             ,yTick: d};
-   });
-   var BarPlot = F2(function (a,
-   b) {
-      return {_: {},x: a,y: b};
-   });
-   var LinePlot = F6(function (a,
-   b,
-   c,
-   d,
-   e,
-   f) {
-      return {_: {}
-             ,lineStyle: c
-             ,marker: d
-             ,markerColor: f
-             ,markerSize: e
-             ,x: a
-             ,y: b};
-   });
-   var NoMarker = {ctor: "NoMarker"};
-   var plotL = F2(function (xs,
-   ys) {
+   var autoXLims = function (ax) {
       return function () {
-         var yExtent = $List.maximum(ys) - $List.minimum(ys);
-         var xExtent = $List.maximum(xs) - $List.minimum(xs);
-         return {_: {}
-                ,lineStyle: $Graphics$Collage.defaultLine
-                ,marker: NoMarker
-                ,markerColor: $Color.blue
-                ,markerSize: 1
-                ,x: xs
-                ,y: ys};
+         var getVal = F2(function (f,
+         p) {
+            return function () {
+               switch (p.ctor)
+               {case "LP": return f(p._0.x);}
+               _U.badCase($moduleName,
+               "between lines 78 and 80");
+            }();
+         });
+         return {ctor: "_Tuple2"
+                ,_0: $List.minimum(A2($List.map,
+                getVal($List.minimum),
+                ax.plots))
+                ,_1: $List.maximum(A2($List.map,
+                getVal($List.maximum),
+                ax.plots))};
+      }();
+   };
+   var showA = F2(function (_v4,
+   ax) {
+      return function () {
+         switch (_v4.ctor)
+         {case "_Tuple2":
+            return function () {
+                 var sy_ = 3.8 / 5 * _v4._1;
+                 var sx_ = 3.8 / 5 * _v4._0;
+                 var xaxis = $Graphics$Collage.traced($Graphics$Collage.defaultLine)(A2($Graphics$Collage.segment,
+                 {ctor: "_Tuple2"
+                 ,_0: (0 - sx_) / 2
+                 ,_1: (0 - sy_) / 2},
+                 {ctor: "_Tuple2"
+                 ,_0: sx_ / 2
+                 ,_1: (0 - sy_) / 2}));
+                 var yaxis = $Graphics$Collage.traced($Graphics$Collage.defaultLine)(A2($Graphics$Collage.segment,
+                 {ctor: "_Tuple2"
+                 ,_0: (0 - sx_) / 2
+                 ,_1: (0 - sy_) / 2},
+                 {ctor: "_Tuple2"
+                 ,_0: (0 - sx_) / 2
+                 ,_1: sy_ / 2}));
+                 var $ = function () {
+                    var _v8 = ax.yLimits;
+                    switch (_v8.ctor)
+                    {case "Auto":
+                       return autoYLims(ax);
+                       case "Explicit":
+                       switch (_v8._0.ctor)
+                         {case "_Tuple2":
+                            return {ctor: "_Tuple2"
+                                   ,_0: _v8._0._0
+                                   ,_1: _v8._0._1};}
+                         break;}
+                    _U.badCase($moduleName,
+                    "between lines 109 and 112");
+                 }(),
+                 ymin = $._0,
+                 ymax = $._1;
+                 var $ = function () {
+                    var _v12 = ax.xLimits;
+                    switch (_v12.ctor)
+                    {case "Auto":
+                       return autoXLims(ax);
+                       case "Explicit":
+                       switch (_v12._0.ctor)
+                         {case "_Tuple2":
+                            return {ctor: "_Tuple2"
+                                   ,_0: _v12._0._0
+                                   ,_1: _v12._0._1};}
+                         break;}
+                    _U.badCase($moduleName,
+                    "between lines 106 and 109");
+                 }(),
+                 xmin = $._0,
+                 xmax = $._1;
+                 var plot2Forms = F4(function (_v16,
+                 _v17,
+                 _v18,
+                 p) {
+                    return function () {
+                       switch (_v18.ctor)
+                       {case "_Tuple2":
+                          return function () {
+                               switch (_v17.ctor)
+                               {case "_Tuple2":
+                                  return function () {
+                                       switch (_v16.ctor)
+                                       {case "_Tuple2":
+                                          return function () {
+                                               switch (p.ctor)
+                                               {case "LP":
+                                                  return A4($LinePlot.plotToForms,
+                                                    {ctor: "_Tuple2"
+                                                    ,_0: _v16._0
+                                                    ,_1: _v16._1},
+                                                    {ctor: "_Tuple2"
+                                                    ,_0: _v17._0
+                                                    ,_1: _v17._1},
+                                                    {ctor: "_Tuple2"
+                                                    ,_0: _v18._0
+                                                    ,_1: _v18._1},
+                                                    p._0);}
+                                               _U.badCase($moduleName,
+                                               "between lines 104 and 106");
+                                            }();}
+                                       _U.badCase($moduleName,
+                                       "between lines 104 and 106");
+                                    }();}
+                               _U.badCase($moduleName,
+                               "between lines 104 and 106");
+                            }();}
+                       _U.badCase($moduleName,
+                       "between lines 104 and 106");
+                    }();
+                 });
+                 var plotForms = $List.concat(A2($List.map,
+                 A3(plot2Forms,
+                 {ctor: "_Tuple2"
+                 ,_0: xmin
+                 ,_1: xmax},
+                 {ctor: "_Tuple2"
+                 ,_0: ymin
+                 ,_1: ymax},
+                 {ctor: "_Tuple2"
+                 ,_0: _v4._0
+                 ,_1: _v4._1}),
+                 ax.plots));
+                 var yExtent = ymax - ymin;
+                 var xExtent = xmax - xmin;
+                 var adjustY = function (y) {
+                    return sy_ / (ymax - ymin) * (y - ymin) - sy_ / 2;
+                 };
+                 var xTickHeight = adjustY(yExtent) / 90;
+                 var adjustX = function (x) {
+                    return sx_ / (xmax - xmin) * (x - xmin) - sx_ / 2;
+                 };
+                 var yTickHeight = adjustX(xExtent) / 90;
+                 var yTicksForm = $List.map(function (yTick) {
+                    return $Graphics$Collage.traced($Graphics$Collage.defaultLine)(A2($Graphics$Collage.segment,
+                    {ctor: "_Tuple2"
+                    ,_0: (0 - sx_) / 2 - yTickHeight
+                    ,_1: yTick},
+                    {ctor: "_Tuple2"
+                    ,_0: (0 - sx_) / 2 + yTickHeight
+                    ,_1: yTick}));
+                 })(A2($List.map,
+                 adjustY,
+                 ax.yTick));
+                 var xTicksForm = $List.map(function (xTick) {
+                    return $Graphics$Collage.traced($Graphics$Collage.defaultLine)(A2($Graphics$Collage.segment,
+                    {ctor: "_Tuple2"
+                    ,_0: xTick
+                    ,_1: (0 - sy_) / 2 - xTickHeight},
+                    {ctor: "_Tuple2"
+                    ,_0: xTick
+                    ,_1: (0 - sy_) / 2 + xTickHeight}));
+                 })(A2($List.map,
+                 adjustX,
+                 ax.xTick));
+                 var textForms = A2($List.map,
+                 function (_v30) {
+                    return function () {
+                       switch (_v30.ctor)
+                       {case "_Tuple3":
+                          switch (_v30._0.ctor)
+                            {case "_Tuple2":
+                               return $Graphics$Collage.move({ctor: "_Tuple2"
+                                                             ,_0: adjustX(_v30._0._0)
+                                                             ,_1: adjustY(_v30._0._1)})($Graphics$Collage.toForm($Text.leftAligned($Text.style(_v30._2)($Text.fromString(_v30._1)))));}
+                            break;}
+                       _U.badCase($moduleName,
+                       "between lines 128 and 129");
+                    }();
+                 },
+                 ax.text);
+                 var largestXTick = $List.isEmpty(ax.xTick) ? 0 : $List.maximum(A2($List.map,
+                 $Basics.abs,
+                 ax.xTick));
+                 var $ = _U.cmp(largestXTick,
+                 99) > 0 ? {ctor: "_Tuple2"
+                           ,_0: $FormatNumber.exponential(1)
+                           ,_1: xTickHeight * 3.0} : {ctor: "_Tuple2"
+                                                     ,_0: $FormatNumber.fixed(1)
+                                                     ,_1: xTickHeight * 3.0},
+                 showXFloat = $._0,
+                 offX = $._1;
+                 var largestYTick = $List.isEmpty(ax.yTick) ? 0 : $List.maximum(A2($List.map,
+                 $Basics.abs,
+                 ax.yTick));
+                 var $ = _U.cmp(largestYTick,
+                 99) > 0 ? {ctor: "_Tuple2"
+                           ,_0: $FormatNumber.exponential(1)
+                           ,_1: yTickHeight * 5.5} : {ctor: "_Tuple2"
+                                                     ,_0: $FormatNumber.fixed(1)
+                                                     ,_1: yTickHeight * 4},
+                 showYFloat = $._0,
+                 offY = $._1;
+                 var tStyle = function () {
+                    var s = ax.textStyle;
+                    return _U.replace([["height"
+                                       ,$Maybe.Just(adjustY(yExtent) / 39)]],
+                    s);
+                 }();
+                 var xTickLabels = A2($List.map,
+                 function (xTick) {
+                    return $Graphics$Collage.move({ctor: "_Tuple2"
+                                                  ,_0: adjustX(xTick)
+                                                  ,_1: (0 - sy_) / 2 - offX})($Graphics$Collage.toForm($Text.centered($Text.style(tStyle)($Text.fromString(showXFloat(xTick))))));
+                 },
+                 ax.xTick);
+                 var yTickLabels = A2($List.map,
+                 function (yTick) {
+                    return $Graphics$Collage.move({ctor: "_Tuple2"
+                                                  ,_0: (0 - sx_) / 2 - offY
+                                                  ,_1: adjustY(yTick)})($Graphics$Collage.toForm($Text.centered($Text.style(tStyle)($Text.fromString(showYFloat(yTick))))));
+                 },
+                 ax.yTick);
+                 var titleForm = $Graphics$Collage.move({ctor: "_Tuple2"
+                                                        ,_0: 0
+                                                        ,_1: sy_ / 2})($Graphics$Collage.toForm($Text.centered($Text.style(tStyle)($Text.fromString(ax.title)))));
+                 return A2($Graphics$Collage.collage,
+                 $Basics.round(_v4._0),
+                 $Basics.round(_v4._1))(A2($List.append,
+                 A2($List.append,
+                 A2($List.append,
+                 A2($List.append,
+                 A2($List.append,
+                 A2($List.append,
+                 A2($List.append,
+                 plotForms,
+                 _L.fromArray([xaxis,yaxis])),
+                 xTicksForm),
+                 yTicksForm),
+                 xTickLabels),
+                 yTickLabels),
+                 textForms),
+                 _L.fromArray([titleForm])));
+              }();}
+         _U.badCase($moduleName,
+         "between lines 94 and 144");
       }();
    });
-   var Triangle = {ctor: "Triangle"};
-   var Square = {ctor: "Square"};
-   var Shell = {ctor: "Shell"};
-   var Circle = {ctor: "Circle"};
-   _elm.Plotting.values = {_op: _op
-                          ,Circle: Circle
-                          ,Shell: Shell
-                          ,Square: Square
-                          ,Triangle: Triangle
-                          ,NoMarker: NoMarker
-                          ,LinePlot: LinePlot
-                          ,BarPlot: BarPlot
-                          ,Axes: Axes
-                          ,Figure: Figure
-                          ,showL: showL
-                          ,lineColor: lineColor
-                          ,lineWidth: lineWidth
-                          ,plotL: plotL};
-   return _elm.Plotting.values;
+   var addTextWithStyle = F2(function (l,
+   ax) {
+      return function () {
+         var prev = ax.text;
+         return _U.replace([["text"
+                            ,A2($List.append,prev,l)]],
+         ax);
+      }();
+   });
+   var addText = F2(function (l,
+   ax) {
+      return function () {
+         var prev = ax.text;
+         var $new = A2($List.map,
+         function (_v37) {
+            return function () {
+               switch (_v37.ctor)
+               {case "_Tuple2":
+                  return {ctor: "_Tuple3"
+                         ,_0: _v37._0
+                         ,_1: _v37._1
+                         ,_2: ax.textStyle};}
+               _U.badCase($moduleName,
+               "on line 68, column 34 to 52");
+            }();
+         },
+         l);
+         return _U.replace([["text"
+                            ,A2($List.append,prev,$new)]],
+         ax);
+      }();
+   });
+   var yLabel = F2(function (l,
+   ax) {
+      return _U.replace([["yLabel"
+                         ,l]],
+      ax);
+   });
+   var xLabel = F2(function (l,
+   ax) {
+      return _U.replace([["xLabel"
+                         ,l]],
+      ax);
+   });
+   var title = F2(function (t,ax) {
+      return _U.replace([["title"
+                         ,t]],
+      ax);
+   });
+   var yTick = F2(function (yTicks,
+   ax) {
+      return _U.replace([["yTick"
+                         ,yTicks]],
+      ax);
+   });
+   var xTick = F2(function (xTicks,
+   ax) {
+      return _U.replace([["xTick"
+                         ,xTicks]],
+      ax);
+   });
+   var yLimits = F2(function (lim,
+   ax) {
+      return _U.replace([["yLimits"
+                         ,$Types.Explicit(lim)]],
+      ax);
+   });
+   var xLimits = F2(function (lim,
+   ax) {
+      return _U.replace([["xLimits"
+                         ,$Types.Explicit(lim)]],
+      ax);
+   });
+   var prettyPrint = function (f) {
+      return _U.cmp($Basics.abs(f),
+      99) < 0 ? A2($FormatNumber.fixed,
+      1,
+      f) : A2($FormatNumber.exponential,
+      1,
+      f);
+   };
+   var textStyle = {_: {}
+                   ,bold: false
+                   ,color: $Color.black
+                   ,height: $Maybe.Nothing
+                   ,italic: false
+                   ,line: $Maybe.Nothing
+                   ,typeface: _L.fromArray(["Helvetica"
+                                           ,"Times New Roman"])};
+   var axes = {_: {}
+              ,plots: _L.fromArray([])
+              ,text: _L.fromArray([])
+              ,textStyle: textStyle
+              ,title: ""
+              ,xLabel: ""
+              ,xLimits: $Types.Auto
+              ,xTick: _L.fromArray([])
+              ,yLabel: ""
+              ,yLimits: $Types.Auto
+              ,yTick: _L.fromArray([])};
+   var linspace = F3(function (a,
+   b,
+   n) {
+      return A2($List.map,
+      function (x) {
+         return (b - a) / $Basics.toFloat(n - 1) * x + a;
+      },
+      _L.range(0.0,
+      $Basics.toFloat(n) - 1));
+   });
+   _elm.Plot.values = {_op: _op
+                      ,linspace: linspace
+                      ,textStyle: textStyle
+                      ,axes: axes
+                      ,prettyPrint: prettyPrint
+                      ,xLimits: xLimits
+                      ,yLimits: yLimits
+                      ,xTick: xTick
+                      ,yTick: yTick
+                      ,title: title
+                      ,xLabel: xLabel
+                      ,yLabel: yLabel
+                      ,addText: addText
+                      ,addTextWithStyle: addTextWithStyle
+                      ,autoXLims: autoXLims
+                      ,autoYLims: autoYLims
+                      ,plots: plots
+                      ,showA: showA};
+   return _elm.Plot.values;
 };
 Elm.Result = Elm.Result || {};
 Elm.Result.make = function (_elm) {
@@ -5481,6 +6232,80 @@ Elm.Text.make = function (_elm) {
                       ,asText: asText};
    return _elm.Text.values;
 };
+Elm.Time = Elm.Time || {};
+Elm.Time.make = function (_elm) {
+   "use strict";
+   _elm.Time = _elm.Time || {};
+   if (_elm.Time.values)
+   return _elm.Time.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   _P = _N.Ports.make(_elm),
+   $moduleName = "Time",
+   $Basics = Elm.Basics.make(_elm),
+   $Native$Time = Elm.Native.Time.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var delay = $Native$Time.delay;
+   var timestamp = $Native$Time.timestamp;
+   var since = F2(function (t,s) {
+      return function () {
+         var stop = A2($Signal.map,
+         $Basics.always(-1),
+         A2(delay,t,s));
+         var start = A2($Signal.map,
+         $Basics.always(1),
+         s);
+         var delaydiff = A3($Signal.foldp,
+         F2(function (x,y) {
+            return x + y;
+         }),
+         0,
+         A2($Signal.merge,start,stop));
+         return A2($Signal.map,
+         F2(function (x,y) {
+            return !_U.eq(x,y);
+         })(0),
+         delaydiff);
+      }();
+   });
+   var every = $Native$Time.every;
+   var fpsWhen = $Native$Time.fpsWhen;
+   var fps = $Native$Time.fps;
+   var inMilliseconds = function (t) {
+      return t;
+   };
+   var millisecond = 1;
+   var second = 1000 * millisecond;
+   var minute = 60 * second;
+   var hour = 60 * minute;
+   var inHours = function (t) {
+      return t / hour;
+   };
+   var inMinutes = function (t) {
+      return t / minute;
+   };
+   var inSeconds = function (t) {
+      return t / second;
+   };
+   _elm.Time.values = {_op: _op
+                      ,millisecond: millisecond
+                      ,second: second
+                      ,minute: minute
+                      ,hour: hour
+                      ,inMilliseconds: inMilliseconds
+                      ,inSeconds: inSeconds
+                      ,inMinutes: inMinutes
+                      ,inHours: inHours
+                      ,fps: fps
+                      ,fpsWhen: fpsWhen
+                      ,every: every
+                      ,since: since
+                      ,timestamp: timestamp
+                      ,delay: delay};
+   return _elm.Time.values;
+};
 Elm.Transform2D = Elm.Transform2D || {};
 Elm.Transform2D.make = function (_elm) {
    "use strict";
@@ -5546,4 +6371,110 @@ Elm.Transform2D.make = function (_elm) {
                              ,scaleX: scaleX
                              ,scaleY: scaleY};
    return _elm.Transform2D.values;
+};
+Elm.Types = Elm.Types || {};
+Elm.Types.make = function (_elm) {
+   "use strict";
+   _elm.Types = _elm.Types || {};
+   if (_elm.Types.values)
+   return _elm.Types.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   _P = _N.Ports.make(_elm),
+   $moduleName = "Types",
+   $Color = Elm.Color.make(_elm),
+   $Graphics$Collage = Elm.Graphics.Collage.make(_elm),
+   $Text = Elm.Text.make(_elm);
+   var Figure = F3(function (a,
+   b,
+   c) {
+      return {_: {}
+             ,axes: a
+             ,coordinates: c
+             ,plotSizes: b};
+   });
+   var Axes = function (a) {
+      return function (b) {
+         return function (c) {
+            return function (d) {
+               return function (e) {
+                  return function (f) {
+                     return function (g) {
+                        return function (h) {
+                           return function (i) {
+                              return function (j) {
+                                 return {_: {}
+                                        ,plots: a
+                                        ,text: i
+                                        ,textStyle: j
+                                        ,title: f
+                                        ,xLabel: g
+                                        ,xLimits: d
+                                        ,xTick: b
+                                        ,yLabel: h
+                                        ,yLimits: e
+                                        ,yTick: c};
+                              };
+                           };
+                        };
+                     };
+                  };
+               };
+            };
+         };
+      };
+   };
+   var LinePlot = F7(function (a,
+   b,
+   c,
+   d,
+   e,
+   f,
+   g) {
+      return {_: {}
+             ,line: c
+             ,lineStyle: d
+             ,marker: e
+             ,markerColor: g
+             ,markerSize: f
+             ,x: a
+             ,y: b};
+   });
+   var BarPlot = F2(function (a,
+   b) {
+      return {_: {},x: a,y: b};
+   });
+   var BP = function (a) {
+      return {ctor: "BP",_0: a};
+   };
+   var LP = function (a) {
+      return {ctor: "LP",_0: a};
+   };
+   var Explicit = function (a) {
+      return {ctor: "Explicit"
+             ,_0: a};
+   };
+   var Auto = {ctor: "Auto"};
+   var NoMarker = {ctor: "NoMarker"};
+   var NGon = function (a) {
+      return {ctor: "NGon",_0: a};
+   };
+   var Shell = {ctor: "Shell"};
+   var Circle = {ctor: "Circle"};
+   _elm.Types.values = {_op: _op
+                       ,Circle: Circle
+                       ,Shell: Shell
+                       ,NGon: NGon
+                       ,NoMarker: NoMarker
+                       ,Auto: Auto
+                       ,Explicit: Explicit
+                       ,LP: LP
+                       ,BP: BP
+                       ,BarPlot: BarPlot
+                       ,LinePlot: LinePlot
+                       ,Axes: Axes
+                       ,Figure: Figure};
+   return _elm.Types.values;
 };

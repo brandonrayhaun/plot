@@ -1,0 +1,106 @@
+Elm.Types = Elm.Types || {};
+Elm.Types.make = function (_elm) {
+   "use strict";
+   _elm.Types = _elm.Types || {};
+   if (_elm.Types.values)
+   return _elm.Types.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   _P = _N.Ports.make(_elm),
+   $moduleName = "Types",
+   $Color = Elm.Color.make(_elm),
+   $Graphics$Collage = Elm.Graphics.Collage.make(_elm),
+   $Text = Elm.Text.make(_elm);
+   var Figure = F3(function (a,
+   b,
+   c) {
+      return {_: {}
+             ,axes: a
+             ,coordinates: c
+             ,plotSizes: b};
+   });
+   var Axes = function (a) {
+      return function (b) {
+         return function (c) {
+            return function (d) {
+               return function (e) {
+                  return function (f) {
+                     return function (g) {
+                        return function (h) {
+                           return function (i) {
+                              return function (j) {
+                                 return {_: {}
+                                        ,plots: a
+                                        ,text: i
+                                        ,textStyle: j
+                                        ,title: f
+                                        ,xLabel: g
+                                        ,xLimits: d
+                                        ,xTick: b
+                                        ,yLabel: h
+                                        ,yLimits: e
+                                        ,yTick: c};
+                              };
+                           };
+                        };
+                     };
+                  };
+               };
+            };
+         };
+      };
+   };
+   var LinePlot = F7(function (a,
+   b,
+   c,
+   d,
+   e,
+   f,
+   g) {
+      return {_: {}
+             ,line: c
+             ,lineStyle: d
+             ,marker: e
+             ,markerColor: g
+             ,markerSize: f
+             ,x: a
+             ,y: b};
+   });
+   var BarPlot = F2(function (a,
+   b) {
+      return {_: {},x: a,y: b};
+   });
+   var BP = function (a) {
+      return {ctor: "BP",_0: a};
+   };
+   var LP = function (a) {
+      return {ctor: "LP",_0: a};
+   };
+   var Explicit = function (a) {
+      return {ctor: "Explicit"
+             ,_0: a};
+   };
+   var Auto = {ctor: "Auto"};
+   var NoMarker = {ctor: "NoMarker"};
+   var NGon = function (a) {
+      return {ctor: "NGon",_0: a};
+   };
+   var Shell = {ctor: "Shell"};
+   var Circle = {ctor: "Circle"};
+   _elm.Types.values = {_op: _op
+                       ,Circle: Circle
+                       ,Shell: Shell
+                       ,NGon: NGon
+                       ,NoMarker: NoMarker
+                       ,Auto: Auto
+                       ,Explicit: Explicit
+                       ,LP: LP
+                       ,BP: BP
+                       ,BarPlot: BarPlot
+                       ,LinePlot: LinePlot
+                       ,Axes: Axes
+                       ,Figure: Figure};
+   return _elm.Types.values;
+};

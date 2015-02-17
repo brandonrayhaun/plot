@@ -13,8 +13,34 @@ Elm.Plotting.make = function (_elm) {
    $Basics = Elm.Basics.make(_elm),
    $Color = Elm.Color.make(_elm),
    $Graphics$Collage = Elm.Graphics.Collage.make(_elm),
+   $Graphics$Element = Elm.Graphics.Element.make(_elm),
    $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
    $Text = Elm.Text.make(_elm);
+   var yTick = F2(function (yTicks,
+   ax) {
+      return _U.replace([["yTick"
+                         ,yTicks]],
+      ax);
+   });
+   var xTick = F2(function (xTicks,
+   ax) {
+      return _U.replace([["xTick"
+                         ,xTicks]],
+      ax);
+   });
+   var yLim = F2(function (lim,
+   ax) {
+      return _U.replace([["yLim"
+                         ,lim]],
+      ax);
+   });
+   var xLim = F2(function (lim,
+   ax) {
+      return _U.replace([["xLim"
+                         ,lim]],
+      ax);
+   });
    var lineWidth = F2(function (w,
    p) {
       return function () {
@@ -35,13 +61,196 @@ Elm.Plotting.make = function (_elm) {
          p);
       }();
    });
-   var showL = function (p) {
+   var showFloat = function (f) {
+      return $Basics.toString($Basics.toFloat($Basics.round(100 * f)) / 100);
+   };
+   var linspace = F3(function (a,
+   b,
+   n) {
+      return A2($List.map,
+      function (x) {
+         return (b - a) / $Basics.toFloat(n - 1) * x + a;
+      },
+      _L.range(0.0,
+      $Basics.toFloat(n) - 1));
+   });
+   var showL = F2(function (p,
+   _v0) {
       return function () {
-         var _v0 = p.marker;
          switch (_v0.ctor)
-         {case "NoMarker":
-            return $Graphics$Collage.toForm($Text.plainText("Not yet supported."));}
-         return $Graphics$Collage.toForm($Text.plainText("Not yet supported."));
+         {case "_Tuple2":
+            return function () {
+                 var _v4 = p.marker;
+                 switch (_v4.ctor)
+                 {case "NoMarker":
+                    return function () {
+                         var $ = {ctor: "_Tuple2"
+                                 ,_0: $List.minimum(p.y)
+                                 ,_1: $List.maximum(p.y)},
+                         ymin = $._0,
+                         ymax = $._1;
+                         var $ = {ctor: "_Tuple2"
+                                 ,_0: $List.minimum(p.x)
+                                 ,_1: $List.maximum(p.x)},
+                         xmin = $._0,
+                         xmax = $._1;
+                         var yExtent = $List.maximum(p.y) - $List.minimum(p.y);
+                         var textStyle = {_: {}
+                                         ,bold: false
+                                         ,color: $Color.black
+                                         ,height: $Maybe.Just(yExtent)
+                                         ,italic: false
+                                         ,line: $Maybe.Nothing
+                                         ,typeface: _L.fromArray(["Helvetica"
+                                                                 ,"Times New Roman"])};
+                         var yTicks = A3(linspace,
+                         $List.minimum(p.y) + yExtent / 6,
+                         $List.maximum(p.y) - yExtent / 6,
+                         4);
+                         var xExtent = $List.maximum(p.x) - $List.minimum(p.x);
+                         var xTicks = A3(linspace,
+                         $List.minimum(p.x) + xExtent / 6,
+                         $List.maximum(p.x) - xExtent / 6,
+                         4);
+                         var sy_ = _v0._1 * (3.8 / 5);
+                         var sx_ = _v0._0 * (3.8 / 5);
+                         var xaxis = $Graphics$Collage.traced($Graphics$Collage.defaultLine)(A2($Graphics$Collage.segment,
+                         {ctor: "_Tuple2"
+                         ,_0: (0 - sx_) / 2
+                         ,_1: (0 - sy_) / 2},
+                         {ctor: "_Tuple2"
+                         ,_0: sx_ / 2
+                         ,_1: (0 - sy_) / 2}));
+                         var yaxis = $Graphics$Collage.traced($Graphics$Collage.defaultLine)(A2($Graphics$Collage.segment,
+                         {ctor: "_Tuple2"
+                         ,_0: (0 - sx_) / 2
+                         ,_1: (0 - sy_) / 2},
+                         {ctor: "_Tuple2"
+                         ,_0: (0 - sx_) / 2
+                         ,_1: sy_ / 2}));
+                         var adjustY = function (y) {
+                            return sy_ / (ymax - ymin) * (y - ymin) - sy_ / 2;
+                         };
+                         var adjustedY = A2($List.map,
+                         adjustY,
+                         p.y);
+                         var xTickHeight = adjustY(yExtent) / 75;
+                         var yTickLabels = A2($List.map,
+                         function (yTick) {
+                            return $Graphics$Collage.move({ctor: "_Tuple2"
+                                                          ,_0: (0 - sx_) / 2 - xTickHeight * 4.0
+                                                          ,_1: adjustY(yTick)})($Graphics$Collage.toForm($Text.centered($Text.style(textStyle)($Text.fromString(showFloat(yTick))))));
+                         },
+                         yTicks);
+                         var adjustX = function (x) {
+                            return sx_ / (xmax - xmin) * (x - xmin) - sx_ / 2;
+                         };
+                         var adjustedX = A2($List.map,
+                         adjustX,
+                         p.x);
+                         var points = A3($List.map2,
+                         F2(function (v0,v1) {
+                            return {ctor: "_Tuple2"
+                                   ,_0: v0
+                                   ,_1: v1};
+                         }),
+                         adjustedX,
+                         adjustedY);
+                         var curve = $Graphics$Collage.traced(p.lineStyle)($Graphics$Collage.path(points));
+                         var yTickHeight = adjustX(xExtent) / 75;
+                         var yTicksForm = $List.map(function (yTick) {
+                            return $Graphics$Collage.traced($Graphics$Collage.defaultLine)(A2($Graphics$Collage.segment,
+                            {ctor: "_Tuple2"
+                            ,_0: (0 - sx_) / 2 - yTickHeight
+                            ,_1: yTick},
+                            {ctor: "_Tuple2"
+                            ,_0: (0 - sx_) / 2 + yTickHeight
+                            ,_1: yTick}));
+                         })(A2($List.map,
+                         adjustY,
+                         yTicks));
+                         var xTicksForm = $List.map(function (xTick) {
+                            return $Graphics$Collage.traced($Graphics$Collage.defaultLine)(A2($Graphics$Collage.segment,
+                            {ctor: "_Tuple2"
+                            ,_0: xTick
+                            ,_1: (0 - sy_) / 2 - xTickHeight},
+                            {ctor: "_Tuple2"
+                            ,_0: xTick
+                            ,_1: (0 - sy_) / 2 + xTickHeight}));
+                         })(A2($List.map,
+                         adjustX,
+                         xTicks));
+                         var xTickLabels = A2($List.map,
+                         function (xTick) {
+                            return $Graphics$Collage.move({ctor: "_Tuple2"
+                                                          ,_0: adjustX(xTick)
+                                                          ,_1: (0 - sy_) / 2 - yTickHeight * 2.5})($Graphics$Collage.toForm($Text.centered($Text.style(textStyle)($Text.fromString(showFloat(xTick))))));
+                         },
+                         xTicks);
+                         return A2($Graphics$Collage.collage,
+                         $Basics.round(_v0._0),
+                         $Basics.round(_v0._1))(A2($List.append,
+                         A2($List.append,
+                         A2($List.append,
+                         A2($List.append,
+                         _L.fromArray([curve
+                                      ,xaxis
+                                      ,yaxis]),
+                         xTicksForm),
+                         yTicksForm),
+                         xTickLabels),
+                         yTickLabels));
+                      }();}
+                 return $Text.plainText("Not yet supported.");
+              }();}
+         _U.badCase($moduleName,
+         "between lines 48 and 84");
+      }();
+   });
+   var axes = function (lps) {
+      return function () {
+         var maxY = $List.maximum(A2($List.map,
+         function (p) {
+            return $List.maximum(p.y);
+         },
+         lps));
+         var minY = $List.minimum(A2($List.map,
+         function (p) {
+            return $List.minimum(p.y);
+         },
+         lps));
+         var ylim = {ctor: "_Tuple2"
+                    ,_0: minY
+                    ,_1: maxY};
+         var yExtent = maxY - minY;
+         var yTicks = A3(linspace,
+         minY + yExtent / 6,
+         maxY - yExtent / 6,
+         4);
+         var maxX = $List.maximum(A2($List.map,
+         function (p) {
+            return $List.maximum(p.x);
+         },
+         lps));
+         var minX = $List.minimum(A2($List.map,
+         function (p) {
+            return $List.minimum(p.x);
+         },
+         lps));
+         var xlim = {ctor: "_Tuple2"
+                    ,_0: minX
+                    ,_1: maxX};
+         var xExtent = maxX - minX;
+         var xTicks = A3(linspace,
+         minX + xExtent / 6,
+         maxX - xExtent / 6,
+         4);
+         return {_: {}
+                ,linePlots: lps
+                ,xLim: xlim
+                ,xTick: xTicks
+                ,yLim: ylim
+                ,yTick: yTicks};
       }();
    };
    var Figure = F3(function (a,
@@ -52,23 +261,17 @@ Elm.Plotting.make = function (_elm) {
              ,coordinates: c
              ,plotSizes: b};
    });
-   var Axes = F6(function (a,
+   var Axes = F5(function (a,
    b,
    c,
    d,
-   e,
-   f) {
+   e) {
       return {_: {}
-             ,barPlots: b
              ,linePlots: a
-             ,xLim: e
-             ,xTick: c
-             ,yLim: f
-             ,yTick: d};
-   });
-   var BarPlot = F2(function (a,
-   b) {
-      return {_: {},x: a,y: b};
+             ,xLim: d
+             ,xTick: b
+             ,yLim: e
+             ,yTick: c};
    });
    var LinePlot = F6(function (a,
    b,
@@ -110,12 +313,18 @@ Elm.Plotting.make = function (_elm) {
                           ,Triangle: Triangle
                           ,NoMarker: NoMarker
                           ,LinePlot: LinePlot
-                          ,BarPlot: BarPlot
                           ,Axes: Axes
                           ,Figure: Figure
+                          ,linspace: linspace
+                          ,showFloat: showFloat
                           ,showL: showL
                           ,lineColor: lineColor
                           ,lineWidth: lineWidth
-                          ,plotL: plotL};
+                          ,plotL: plotL
+                          ,axes: axes
+                          ,xLim: xLim
+                          ,yLim: yLim
+                          ,xTick: xTick
+                          ,yTick: yTick};
    return _elm.Plotting.values;
 };
